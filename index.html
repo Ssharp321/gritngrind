@@ -6,6 +6,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..800;1,9..40,400&family=Oswald:wght@500;600;700&display=swap">
+    <link rel="preload" href="images/hero-f450-wide.jpg" as="image" fetchpriority="high">
     <meta name="description" content="Grit N Grind Auto Care: 5-star mobile detailing in Tempe, Mesa, Chandler, Sun Lakes, Gilbert and Queen Creek. No deposit, satisfaction guaranteed. Get a free quote today.">
     <meta name="robots" content="noindex, follow">
     <title>Grit N Grind Auto Care - Mobile Detailing</title>
@@ -24,7 +25,6 @@
   --bg-dark: #E6E6E6;
   --bg-light: #FFFFFF;
   --border: #E2E2E2;
-  --hero-overlay: rgba(12, 32, 72, 0.82);
 
   --font: 'DM Sans', system-ui, -apple-system, sans-serif;
 
@@ -37,11 +37,13 @@
   --radius-sm: 8px;
   --radius-pill: 999px;
 
-  --side-padding: 20px;
+  --side-padding: 24px;
   --section-padding: 40px;
+  --flex-direction: column;
 
   --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
   --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -51,7 +53,9 @@ html { scroll-behavior: smooth; }
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-delay: 0.01ms !important;
+    animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    transition-delay: 0.01ms !important;
     scroll-behavior: auto !important;
   }
 }
@@ -61,6 +65,7 @@ body {
   color: var(--text);
   background: var(--bg-light);
   -webkit-font-smoothing: antialiased;
+  padding-bottom: 76px; /* space for sticky mobile CTA bar */
   -webkit-tap-highlight-color: transparent;
 }
 h1, h2, h3, strong { font-weight: 700; }
@@ -86,156 +91,473 @@ h1, h2, h3, strong { font-weight: 700; }
 }
 .skip-link:focus { top: 12px; }
 
-.visually-hidden {
-  position: absolute; width: 1px; height: 1px; overflow: hidden;
-  clip: rect(0 0 0 0); white-space: nowrap;
-}
-
-/* ---------- HEADER ---------- */
-.site-header { background: var(--bg-light); }
-.header-inner {
+/* ---------- NAV ---------- */
+nav {
   display: flex;
+  position: sticky;
+  background-color: var(--bg-light);
   align-items: center;
+  padding: 20px var(--side-padding);
+  width: 100%;
+  min-height: 100px;
+  top: 0;
+  z-index: 100;
   justify-content: space-between;
-  gap: 16px;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 14px var(--side-padding);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  transition: box-shadow 200ms var(--ease-out-quart);
 }
-.main-logo img { display: block; height: 52px; width: auto; }
-.desktop-img { display: none !important; }
-.header-reviews {
-  display: none;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  text-decoration: none;
-  color: var(--text);
-}
-.header-reviews img { width: 150px; height: auto; }
-.header-reviews p { font-size: 12px; }
-.header-phone {
+nav.nav-scrolled { box-shadow: 0 2px 14px rgba(0, 0, 0, 0.12); }
+.main-logo { height: 100%; }
+.main-logo img { height: 100%; }
+.desktop-img { display: none; }
+.mobile-img { display: block; }
+.ctas { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.cta-phone {
+  gap: 8px;
   display: flex;
-  flex-direction: column;
-  align-items: end;
-  gap: 2px;
-  text-decoration: none;
+  background-color: var(--bg-dark);
+  align-items: center;
+  justify-content: center;
+  padding: 16px 24px;
+  border-radius: var(--radius-pill);
   color: var(--text);
-}
-.header-phone-number {
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--accent-dark);
-  text-decoration: underline;
-  text-underline-offset: 3px;
+  text-decoration: none;
+  font-weight: 500;
   white-space: nowrap;
 }
-.header-phone:hover .header-phone-number { color: var(--accent); }
-.header-phone-sub { font-size: 12px; }
-
-/* ---------- TRUST BAR ---------- */
-.trust-bar { background: var(--text); color: var(--text-light); }
-.trust-bar ul {
-  list-style: none;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-}
-.trust-bar li {
-  font-size: 13px;
+.cta-form {
+  display: flex;
+  background-color: var(--accent);
+  align-items: center;
+  justify-content: center;
+  padding: 16px 24px;
+  border-radius: var(--radius-pill);
+  text-decoration: none;
+  color: var(--text-light);
   font-weight: 500;
-  text-align: center;
-  padding: 11px 8px;
-  border-right: 1px solid rgba(255, 255, 255, 0.18);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+  border: none;
+  font-family: var(--font);
+  font-size: var(--fs-body);
+  cursor: pointer;
+  white-space: nowrap;
 }
-.trust-bar li:nth-child(2n) { border-right: none; }
-.trust-bar li:nth-child(n+3) { border-bottom: none; }
+.cta-form:hover, .cta-phone:hover { filter: brightness(0.96); }
+.cta-form:active, .cta-phone:active { transform: scale(0.97); }
+.cta-form-nav { display: none; }
+.icon { height: 18px; width: 18px; flex-shrink: 0; }
+.cta-phone, .cta-form, .vehicle-btn, .pkg-book, .faq-q {
+  touch-action: manipulation;
+  transition: transform 150ms var(--ease-out-quart), border-color 150ms var(--ease-out-quart), background-color 150ms var(--ease-out-quart), filter 150ms var(--ease-out-quart);
+}
 
 /* ---------- HERO ---------- */
 .section-hero {
-  position: relative;
+  display: flex;
+  flex-direction: var(--flex-direction);
+  width: 100%;
+  padding: var(--section-padding) var(--side-padding);
+  background-color: var(--bg);
+  align-items: center;
+  gap: 32px;
+}
+.hero-txt {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: start;
+  gap: 14px;
+}
+.trust-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--text-muted);
+  flex-wrap: wrap;
+}
+.trust-line .stars { color: var(--google-star); letter-spacing: 1px; }
+.trust-line .dot { color: var(--border); }
+h1.hero-h1 { font-size: var(--fs-h1); line-height: 1.15; text-wrap: balance; }
+p.hero-sub { font-size: var(--fs-body); color: var(--text-muted); max-width: 52ch; }
+
+.media-slot {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius);
+  border: 1.5px dashed var(--border);
+  background: var(--bg-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: var(--text-faint);
+  font-size: var(--fs-small);
+  padding: 16px;
+}
+/* Hero photo behind a dark blue overlay so the white text stays readable */
+.section-hero {
   background-color: #0c2048;
-  background-image: linear-gradient(var(--hero-overlay), var(--hero-overlay)), linear-gradient(135deg, #1c1c1c, #070707);
+  background-image: linear-gradient(rgba(8, 8, 8, 0.78), rgba(8, 8, 8, 0.78)), url('images/hero-f450-wide.jpg');
   background-size: cover;
   background-position: center;
   color: var(--text-light);
-  padding: var(--section-padding) var(--side-padding);
-  scroll-margin-top: 0;
 }
-/* Mobile order: text, form, guarantee. Desktop: text + guarantee on the left, form on the right. */
-.hero-inner {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 24px;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-.hero-txt { display: flex; flex-direction: column; align-items: start; gap: 18px; }
-.hero-rating { display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 500; flex-wrap: wrap; }
-.hero-rating .stars { color: var(--google-star); font-size: 22px; letter-spacing: 2px; line-height: 1; }
-h1.hero-h1 { font-size: var(--fs-h1); font-weight: 800; line-height: 1.12; letter-spacing: -0.01em; text-wrap: balance; }
-.hero-rule { width: 88px; height: 4px; background: var(--text-light); border: none; border-radius: 2px; }
-p.hero-sub { font-size: 18px; line-height: 1.6; max-width: 34ch; opacity: 0.95; }
-.hero-points { list-style: none; display: flex; flex-direction: column; gap: 12px; padding-left: 4px; }
-.hero-points li { display: flex; align-items: center; gap: 12px; font-size: 18px; }
+.section-hero .trust-line { color: rgba(255, 255, 255, 0.9); }
+.section-hero .trust-line .dot { color: rgba(255, 255, 255, 0.4); }
+.section-hero p.hero-sub { color: rgba(255, 255, 255, 0.88); }
+.section-hero .hero-points li { color: var(--text-light); }
+.hero-form { width: 100%; display: flex; justify-content: center; }
+.hero-points { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.hero-points li { display: flex; align-items: center; gap: 10px; font-weight: 500; }
 .hero-points li::before {
   content: '';
-  width: 20px; height: 20px; min-width: 20px; border-radius: 3px;
-  background: var(--accent);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14' fill='none'%3E%3Cpath d='M3 7.5L5.5 10L11 5' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-  background-size: 80%;
+  width: 20px; height: 20px; min-width: 20px; border-radius: 50%;
+  background: var(--accent-tint2);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14' fill='none'%3E%3Cpath d='M3 7.5L5.5 10L11 5' stroke='%2344B5EE' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-size: 60%;
   background-repeat: no-repeat;
   background-position: center;
 }
-
-.guarantee {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  background: var(--bg-light);
-  color: var(--text);
-  padding: 16px 20px 16px 16px;
-  margin-top: 12px;
-  max-width: 540px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
-}
-.guarantee-seal { width: 110px; height: 110px; flex-shrink: 0; }
-.guarantee p { font-size: 14px; line-height: 1.7; text-wrap: pretty; }
 
 @keyframes hero-in {
   from { opacity: 0; transform: translateY(14px); }
   to { opacity: 1; transform: none; }
 }
-.hero-txt > * { animation: hero-in 700ms var(--ease-out-quint) both; }
-.hero-txt > .hero-sub { animation-delay: 120ms; }
-.hero-txt > .hero-points, .hero-txt > .price-line { animation-delay: 200ms; }
-.guarantee { order: 2; animation: hero-in 700ms var(--ease-out-quint) both; animation-delay: 280ms; }
-
-.price-line {
-  display: flex; flex-wrap: wrap; gap: 6px 10px;
-  font-size: 15px;
+.hero-txt > * {
+  animation: hero-in 700ms var(--ease-out-quint) both;
 }
-.price-line span {
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.25);
+.hero-txt > .trust-line { animation-delay: 0ms; }
+.hero-txt > .hero-h1 { animation-delay: 0ms; }
+.hero-txt > .hero-sub { animation-delay: 170ms; }
+.hero-txt > .hero-points { animation-delay: 240ms; }
+
+/* ---------- TRUST STRIP ---------- */
+.section-trust {
+  display: flex;
+  width: 100%;
+  padding: 24px var(--side-padding);
+  background: var(--bg-light);
+  border-bottom: 1px solid var(--border);
+}
+.trust-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.trust-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: var(--fs-small);
+  font-weight: 500;
+}
+/* Scroll-reveal for genuine repeating lists only (trust items, package cards, gallery, reviews).
+   Hidden state only applies once JS has armed it (body.reveal-armed); if JS never runs,
+   these elements keep their normal fully-visible default. */
+body.reveal-armed [data-reveal] {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 550ms var(--ease-out-quart), transform 550ms var(--ease-out-quart);
+  transition-delay: calc(var(--i, 0) * 70ms);
+}
+body.reveal-armed [data-reveal].reveal-in {
+  opacity: 1;
+  transform: none;
+}
+.trust-item .check {
+  width: 20px; height: 20px; min-width: 20px; border-radius: 50%;
+  background: var(--accent-tint2);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14' fill='none'%3E%3Cpath d='M3 7.5L5.5 10L11 5' stroke='%2344B5EE' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-size: 60%;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* ---------- SECTION SHELL ---------- */
+.section {
+  width: 100%;
+  padding: var(--section-padding) var(--side-padding);
+  scroll-margin-top: 100px;
+}
+.section-alt { background: var(--bg); }
+.section-inner { max-width: 1100px; margin: 0 auto; }
+.section-eyebrow {
+  font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--accent-dark); margin-bottom: 8px;
+}
+.section-title { font-size: var(--fs-h2); margin-bottom: 6px; text-wrap: balance; }
+.section-subtext { color: var(--text-muted); font-size: var(--fs-body); margin-bottom: 24px; max-width: 60ch; }
+
+/* ---------- VEHICLE + PACKAGES (reused from pricing.html logic) ---------- */
+.vehicle-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin-bottom: 24px; }
+.vehicle-btn {
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 14px;
+  text-align: center;
+  cursor: pointer;
+  background: var(--bg-light);
+  font-family: var(--font);
+  color: var(--text);
+}
+.vehicle-btn:hover { border-color: var(--accent); }
+.vehicle-btn:active { transform: scale(0.98); }
+.vehicle-btn[aria-pressed="true"] { border: 2px solid var(--accent); background: var(--accent-tint); }
+.vehicle-btn .v-name { font-size: 14px; font-weight: 600; }
+.vehicle-btn .v-eg { font-size: 12px; color: var(--text-faint); margin-top: 4px; }
+
+.packages-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+.pkg {
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  background: var(--bg-light);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+.pkg.featured { border: 2px solid var(--accent); }
+.pkg-badge {
+  position: absolute; top: -12px; left: 20px;
+  background: var(--accent); color: var(--text-light);
+  font-size: 11px; font-weight: 600; padding: 4px 12px;
   border-radius: var(--radius-pill);
-  padding: 5px 12px;
-  white-space: nowrap;
 }
-.price-line strong { color: #9BDCFA; }
-.estimate-card { animation: hero-in 800ms var(--ease-out-quint) both; animation-delay: 100ms; }
+.pkg-name { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+.pkg-tagline { font-size: 13px; color: var(--text-muted); margin-bottom: 14px; }
+.pkg-section-label {
+  font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--text-faint); margin: 14px 0 8px;
+}
+.pkg-list { list-style: none; display: flex; flex-direction: column; gap: 7px; margin-bottom: 20px; }
+.pkg-list li {
+  font-size: 12.5px; color: var(--text-muted); display: flex; align-items: flex-start; gap: 7px; line-height: 1.4;
+}
+.pkg-list li::before {
+  content: '';
+  display: block; width: 14px; height: 14px; min-width: 14px; border-radius: 50%;
+  background: var(--accent-tint2);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14' fill='none'%3E%3Cpath d='M3 7.5L5.5 10L11 5' stroke='%2344B5EE' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-size: cover;
+  margin-top: 1px;
+}
+.pkg-price {
+  font-size: 32px; font-weight: 700; color: var(--accent-dark); font-variant-numeric: tabular-nums;
+  display: inline-block;
+  transition: opacity 180ms var(--ease-out-quart), transform 180ms var(--ease-out-quart);
+}
+.pkg-price.price-updating { opacity: 0; transform: translateY(4px); }
+.pkg-price-note { font-size: 11px; color: var(--text-faint); margin-bottom: 16px; }
+.pkg-details { margin-bottom: 18px; border-top: 1px solid var(--border); }
+.pkg-details summary {
+  list-style: none;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 0 4px;
+  font-size: 14px; font-weight: 700; color: var(--accent-dark);
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.pkg-details summary::-webkit-details-marker { display: none; }
+.pkg-details summary::after {
+  content: '';
+  width: 8px; height: 8px;
+  border-right: 2px solid currentColor; border-bottom: 2px solid currentColor;
+  transform: rotate(45deg) translateY(-2px);
+  transition: transform 200ms var(--ease-out-quart);
+}
+.pkg-details[open] summary::after { transform: rotate(-135deg) translateY(-2px); }
+.pkg-details .pkg-list:last-child { margin-bottom: 4px; }
+.pkg-details[open] summary { margin-bottom: 4px; }
+.pkg-book {
+  display: block; text-align: center; text-decoration: none;
+  margin-top: auto; padding: 12px; background: var(--accent); color: #fff;
+  border-radius: var(--radius-sm); font-weight: 600; font-size: 14px;
+}
+.pkg-book:hover { background: var(--accent-dark); }
+.pkg-book:active { transform: scale(0.97); }
 
-/* ---------- ESTIMATE FORM ---------- */
+/* ---------- GALLERY ---------- */
+.gallery-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.gallery-slot {
+  aspect-ratio: 1 / 1;
+  transition: transform 220ms var(--ease-out-quart), box-shadow 220ms var(--ease-out-quart);
+}
+.gallery-slot:hover { transform: scale(1.02); box-shadow: 0 8px 24px rgba(0,0,0,0.10); }
+/* Mobile (2-column grid): reorder so interior fills the left column
+   and exterior fills the right column.
+   Desktop's 3-column grid already gets this grouping from natural DOM order. */
+@media (max-width: 699px) {
+  .gallery-grid > :nth-child(1) { order: 1; }
+  .gallery-grid > :nth-child(2) { order: 3; }
+  .gallery-grid > :nth-child(3) { order: 5; }
+  .gallery-grid > :nth-child(4) { order: 2; }
+  .gallery-grid > :nth-child(5) { order: 4; }
+  .gallery-grid > :nth-child(6) { order: 6; }
+}
+
+/* ---------- REVIEWS ---------- */
+.reviews-grid { list-style: none; display: grid; grid-template-columns: 1fr; gap: 28px; }
+.reviews-grid > li { display: flex; flex-direction: column; }
+.reviews-grid > li[hidden] { display: none; }
+/* Two reviews per row on phones and tablets (desktop rules further down switch to 3). */
+.reviews-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.review-bubble {
+  flex: 1;
+  position: relative;
+  background: var(--bg);
+  border-radius: 24px;
+  padding: 22px 24px 20px;
+  margin-bottom: 18px;
+}
+.review-bubble::after {
+  content: '';
+  position: absolute;
+  left: 28px;
+  bottom: -12px;
+  border-width: 12px 12px 0 0;
+  border-style: solid;
+  border-color: var(--bg) transparent transparent transparent;
+}
+.review-bubble .stars { color: var(--google-star); font-size: 18px; letter-spacing: 2px; line-height: 1; margin-bottom: 8px; }
+.review-text {
+  font-size: 15px;
+  line-height: 1.55;
+  color: #333;
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  line-clamp: 5;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.review-bubble.expanded .review-text { -webkit-line-clamp: unset; line-clamp: unset; display: block; }
+.review-more {
+  background: none; border: none; padding: 0; margin-top: 4px;
+  font-family: var(--font); font-size: 14px; color: var(--text-faint);
+  cursor: pointer; text-decoration: underline; text-underline-offset: 2px;
+}
+.review-more[hidden] { display: none; }
+.review-author { display: flex; align-items: center; gap: 12px; }
+.review-author img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+.review-initial {
+  width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 18px; font-weight: 600;
+}
+.review-author-name { font-size: 15px; font-weight: 700; }
+.review-author-src { font-size: 13px; color: var(--text-faint); }
+.review-author-src .g { font-weight: 700; }
+.review-author-src .g b:nth-child(1), .review-author-src .g b:nth-child(4) { color: #4285F4; }
+.review-author-src .g b:nth-child(2), .review-author-src .g b:nth-child(6) { color: #EA4335; }
+.review-author-src .g b:nth-child(3) { color: #FBBC05; }
+.review-author-src .g b:nth-child(5) { color: #34A853; }
+.reviews-load { display: flex; justify-content: center; margin-top: 28px; }
+.reviews-load-btn { border: none; font-family: var(--font); cursor: pointer; }
+.reviews-load-btn[hidden] { display: none; }
+.reviews-more { margin-top: 18px; text-align: center; }
+.reviews-more a { color: var(--accent-dark); font-weight: 700; text-decoration: none; font-size: 15px; }
+.reviews-more a:hover { text-decoration: underline; }
+
+/* ---------- JORDAN ---------- */
+.jordan-wrap { display: flex; flex-direction: column; gap: 20px; align-items: start; }
+.jordan-photo { width: 140px; height: 140px; min-height: 140px; border-radius: 50%; flex-shrink: 0; overflow: hidden; }
+.jordan-photo .media-slot { border-radius: 50%; }
+.jordan-text p { font-size: var(--fs-body); color: var(--text-muted); margin-bottom: 10px; max-width: 60ch; text-wrap: pretty; }
+.jordan-text p:last-child { margin-bottom: 0; }
+.jordan-name { font-weight: 700; color: var(--text); }
+
+/* ---------- FAQ ---------- */
+.faq-list { display: flex; flex-direction: column; gap: 8px; }
+.faq-item { border: 1.5px solid var(--border); border-radius: var(--radius); overflow: hidden; background: var(--bg-light); }
+.faq-q {
+  display: flex; align-items: center; justify-content: space-between;
+  width: 100%; text-align: left; padding: 16px 18px; cursor: pointer;
+  font-size: 14px; font-weight: 600; gap: 12px;
+  background: none; border: none; font-family: var(--font); color: var(--text);
+}
+.faq-q:hover { background: var(--bg); }
+.faq-q:active { background: var(--accent-tint); }
+.faq-chevron { width: 18px; height: 18px; flex-shrink: 0; color: var(--accent-dark); }
+.faq-chevron-g { transform-origin: 12px 12px; transition: transform 0.25s var(--ease-out-quart); }
+.faq-chevron.open .faq-chevron-g { transform: rotate(180deg); }
+.faq-a {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows 0.3s var(--ease-out-quart), opacity 0.25s var(--ease-out-quart);
+}
+.faq-a.open { grid-template-rows: 1fr; opacity: 1; }
+.faq-a-inner {
+  overflow: hidden;
+  font-size: 13px; color: var(--text-muted); line-height: 1.65;
+  padding: 0 18px;
+  text-wrap: pretty;
+}
+.faq-a.open .faq-a-inner { padding: 0 18px 16px; }
+
+/* ---------- SERVICE AREAS ---------- */
+.areas-list { display: flex; flex-wrap: wrap; gap: 10px; }
+.area-chip {
+  background: var(--bg-dark); color: var(--text); font-size: 13px; font-weight: 500;
+  padding: 8px 16px; border-radius: var(--radius-pill);
+}
+.areas-note { margin-top: 14px; font-size: 13px; color: var(--text-faint); }
+
+/* ---------- FINAL CTA ---------- */
+.section-final {
+  background: var(--text);
+  color: var(--text-light);
+  text-align: center;
+  padding: 48px var(--side-padding);
+}
+.section-final .section-eyebrow { color: var(--accent); }
+.section-final h2 { font-size: var(--fs-h2); margin-bottom: 20px; text-wrap: balance; }
+.final-trust { margin-top: 18px; font-size: 14px; opacity: 0.85; }
+
+/* ---------- CTA PAIR (free quote + call), repeated in every section ---------- */
+.section-ctas { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px 24px; margin-top: 32px; }
+.section-ctas.left { justify-content: flex-start; }
+.btn-quote, .btn-call {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 280px;
+  max-width: 100%;
+  padding: 17px 20px;
+  border-radius: 8px;
+  font-family: var(--font);
+  font-size: 18px;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+  touch-action: manipulation;
+  transition: transform 150ms var(--ease-out-quart), filter 150ms var(--ease-out-quart);
+}
+.btn-quote { background: linear-gradient(var(--accent), var(--accent-dark)); color: var(--text-light); }
+.btn-call { background: var(--text); color: var(--accent); }
+.btn-quote:hover, .btn-call:hover { filter: brightness(1.08); }
+.btn-quote:active, .btn-call:active { transform: scale(0.98); }
+.section-final .btn-call { background: var(--bg-light); color: var(--text); }
+
+/* ---------- QUOTE FORM (hero) ---------- */
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap;
+}
 .estimate-card {
   width: 100%;
-  max-width: 500px;
-  background: linear-gradient(#ffffff, #ececec);
+  max-width: 480px;
+  background: linear-gradient(#ffffff, #f1f1f1);
   color: var(--text);
   border-radius: 16px;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3);
-  align-self: center;
-  justify-self: center;
-  scroll-margin-top: 16px;
+  border: 1.5px solid var(--border);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+  scroll-margin-top: 110px;
+  animation: hero-in 800ms var(--ease-out-quint) both;
+  animation-delay: 100ms;
 }
 .estimate-title {
   font-size: 24px;
@@ -245,16 +567,14 @@ p.hero-sub { font-size: 18px; line-height: 1.6; max-width: 34ch; opacity: 0.95; 
   margin: 0 16px;
   border-bottom: 1px solid #d6d6d6;
 }
-.estimate-form { padding: 16px 28px 22px; }
+.estimate-form { padding: 16px 26px 22px; }
 .estimate-form fieldset { border: none; margin-bottom: 14px; }
 .estimate-form legend { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+.legend-optional { font-weight: 400; color: var(--text-faint); font-size: 14px; }
 .check-grid { display: grid; grid-template-columns: 1fr 1fr; column-gap: 12px; }
 .check-row { display: flex; align-items: center; gap: 8px; font-size: 15px; padding: 4px 0; cursor: pointer; }
 .check-row input { width: 17px; height: 17px; accent-color: var(--accent-dark); cursor: pointer; }
-.field-row { display: grid; gap: 14px; margin-bottom: 14px; }
-.field-row.two { grid-template-columns: 1fr 1fr; }
-.field-row.three { grid-template-columns: repeat(3, 1fr); }
-.field label { display: block; font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+.field-row { margin-bottom: 14px; }
 .field input {
   width: 100%;
   font-family: var(--font);
@@ -269,7 +589,18 @@ p.hero-sub { font-size: 18px; line-height: 1.6; max-width: 34ch; opacity: 0.95; 
 .field input::placeholder { font-style: italic; color: #9a9a9a; }
 .field input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-tint2); }
 .form-note { font-size: 14px; font-weight: 600; color: var(--accent-dark); margin: 2px 0 12px; }
-.legend-optional { font-weight: 400; color: var(--text-faint); font-size: 14px; }
+.estimate-form fieldset { margin-top: 2px; }
+/* Short review right under the submit button, to reassure at the moment of decision */
+.form-review {
+  display: flex; align-items: flex-start; gap: 12px;
+  margin: 16px 0 0;
+  padding-top: 14px;
+  border-top: 1px solid #dedede;
+}
+.form-review img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+.form-review-stars { color: var(--google-star); font-size: 13px; letter-spacing: 1px; line-height: 1; margin-bottom: 4px; }
+.form-review blockquote { font-size: 14px; font-style: italic; line-height: 1.45; color: var(--text); }
+.form-review figcaption { font-size: 12px; color: var(--text-faint); margin-top: 3px; }
 .estimate-submit {
   width: 100%;
   margin-top: 6px;
@@ -298,146 +629,25 @@ p.hero-sub { font-size: 18px; line-height: 1.6; max-width: 34ch; opacity: 0.95; 
   margin-top: 12px;
 }
 
-/* ---------- SERVICES ---------- */
-.section-services {
-  background: #F7F7F7;
-  padding: 24px var(--side-padding) 36px;
-  text-align: center;
+/* ---------- FOOTER ---------- */
+.section-footer {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background-color: var(--text-muted); color: var(--text-light);
+  padding: var(--section-padding) var(--side-padding); gap: 14px; text-align: center;
 }
-.services-inner { max-width: 1200px; margin: 0 auto; }
-.services-logo { display: block; height: 48px; width: auto; margin: 0 auto 10px; }
-.services-title { font-size: 28px; font-weight: 500; line-height: 1.2; text-wrap: balance; margin-bottom: 8px; }
-.services-title .brand { color: var(--accent-dark); font-weight: 800; }
-.services-title strong { font-weight: 800; }
-.services-sub { font-size: 15px; color: var(--text-muted); max-width: 70ch; margin: 0 auto 28px; text-wrap: pretty; }
-.services-sub strong { color: var(--text); white-space: nowrap; }
-.services-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 20px 10px;
-  list-style: none;
-}
-.service-img {
-  aspect-ratio: 1 / 1;
-  border-radius: var(--radius);
-  overflow: hidden;
-  background: var(--bg-dark);
-  margin-bottom: 14px;
-}
-.service-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.service-name { font-size: 17px; font-weight: 700; margin-bottom: 2px; }
-.service-tag { font-size: 13px; color: var(--text-faint); }
-.service-price { font-size: 14px; font-weight: 700; color: var(--accent-dark); margin-top: 4px; }
-.services-ctas {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 14px 30px;
-  margin-top: 28px;
-}
-.btn-quote, .btn-call {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 280px;
-  max-width: 100%;
-  padding: 17px 20px;
-  border-radius: 8px;
-  font-size: 18px;
-  font-weight: 700;
-  text-decoration: none;
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
-  touch-action: manipulation;
-  transition: transform 150ms var(--ease-out-quart), filter 150ms var(--ease-out-quart);
-}
-.btn-quote { background: linear-gradient(var(--accent), var(--accent-dark)); color: var(--text-light); }
-.btn-call { background: var(--text); color: var(--accent); }
-.btn-quote:hover, .btn-call:hover { filter: brightness(1.08); }
-.btn-quote:active, .btn-call:active { transform: scale(0.98); }
-
-/* ---------- WHY US ---------- */
-.section-why {
-  background: #F7F7F7;
-  padding: 16px var(--side-padding) 48px;
-}
-.why-inner {
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-.why-media {
-  position: relative;
-  border-radius: 36px;
-  overflow: hidden;
-  background: #1d2a3a;
-  aspect-ratio: 1 / 1;
-}
-.why-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.why-caption {
-  position: absolute;
-  left: 50%;
-  bottom: 18%;
-  transform: translateX(-50%);
-  width: calc(100% - 40px);
-  max-width: 440px;
-  background: rgba(40, 40, 40, 0.72);
-  color: var(--text-light);
-  text-align: center;
-  padding: 12px 18px 14px;
-  border-radius: 8px;
-}
-.why-caption h3 { font-size: 19px; font-weight: 800; margin-bottom: 4px; }
-.why-caption p { font-size: 12px; line-height: 1.5; }
-.why-title { font-size: 32px; font-weight: 500; line-height: 1.2; margin-bottom: 20px; text-wrap: balance; }
-.why-title strong { font-weight: 800; }
-.why-list { list-style: none; display: flex; flex-direction: column; gap: 24px; margin-bottom: 28px; }
-.why-list li { display: flex; align-items: start; gap: 20px; }
-.why-list img { width: 64px; height: 64px; flex-shrink: 0; }
-.why-list p { font-size: 15px; line-height: 1.6; color: var(--text-muted); text-wrap: pretty; }
-.why-list strong { color: var(--text); }
-.why-ctas { display: flex; flex-direction: column; gap: 16px; align-items: start; }
-.trust-bar-bottom li { font-size: 13px; }
-
-/* ---------- BEFORE / AFTER ---------- */
-.section-results {
-  background: #F7F7F7;
-  padding: 48px var(--side-padding) 48px;
-  text-align: center;
-}
-.results-inner { max-width: 1200px; margin: 0 auto; }
-.results-title { font-size: 30px; font-weight: 500; line-height: 1.2; margin-bottom: 8px; text-wrap: balance; }
-.results-title strong { font-weight: 800; }
-.results-sub { font-size: 17px; margin-bottom: 26px; }
-.results-sub a { color: var(--text); font-weight: 700; text-decoration: none; }
-.results-sub a:hover { text-decoration: underline; }
-.results-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; list-style: none; }
-.results-grid li {
-  position: relative;
-  aspect-ratio: 1 / 1;
-  overflow: hidden;
-  border-radius: var(--radius);
-  background: var(--bg-dark);
-}
-.results-grid img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.results-label {
-  position: absolute; top: 10px; left: 10px;
-  background: rgba(40, 40, 40, 0.75);
-  color: #fff;
-  font-size: 13px;
-  padding: 5px 12px;
-}
+.footer-phone { font-size: 14px; }
+.footer-copy { font-size: 12px; opacity: 0.8; }
+.footer-copy a { color: var(--text-light); }
 
 /* ---------- STICKY MOBILE CTA BAR ---------- */
 .mobile-cta-bar {
   position: fixed; bottom: 0; left: 0; right: 0;
   display: flex; gap: 10px;
-  padding: 10px var(--side-padding);
-  padding-bottom: max(10px, env(safe-area-inset-bottom));
+  padding: 12px var(--side-padding);
+  padding-bottom: max(12px, env(safe-area-inset-bottom));
   background: var(--bg-light);
   border-top: 1px solid var(--border);
-  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 -2px 8px rgba(0,0,0,0.06);
   z-index: 200;
 }
 .mobile-cta-bar a {
@@ -451,513 +661,180 @@ p.hero-sub { font-size: 18px; line-height: 1.6; max-width: 34ch; opacity: 0.95; 
 }
 .mobile-cta-bar .bar-call { background: var(--text); color: var(--accent); }
 .mobile-cta-bar .bar-quote { background: linear-gradient(var(--accent), var(--accent-dark)); color: var(--text-light); }
-body { padding-bottom: 72px; }
-.results-ctas { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px 30px; margin-top: 26px; }
-
-/* ---------- REVIEWS ---------- */
-.section-reviews {
-  background: #F7F7F7;
-  padding: 40px var(--side-padding) 56px;
-}
-.reviews-inner { max-width: 1040px; margin: 0 auto; }
-.reviews-head { text-align: center; margin-bottom: 28px; }
-.reviews-head img { width: 180px; height: auto; margin: 0 auto 12px; display: block; }
-.reviews-title { font-size: 30px; font-weight: 500; line-height: 1.2; }
-.reviews-title strong { font-weight: 800; }
-.reviews-grid { list-style: none; display: grid; grid-template-columns: 1fr; gap: 28px 28px; }
-.reviews-grid > li { display: flex; flex-direction: column; }
-.reviews-grid > li[hidden] { display: none; }
-.review-bubble {
-  flex: 1;
-  position: relative;
-  background: #EAEAEA;
-  border-radius: 28px;
-  padding: 22px 24px 20px;
-  margin-bottom: 18px;
-}
-.review-bubble::after {
-  content: '';
-  position: absolute;
-  left: 28px;
-  bottom: -12px;
-  border-width: 12px 12px 0 0;
-  border-style: solid;
-  border-color: #EAEAEA transparent transparent transparent;
-}
-.review-bubble .stars { color: var(--google-star); font-size: 18px; letter-spacing: 2px; line-height: 1; margin-bottom: 8px; }
-.review-text {
-  font-size: 15px;
-  line-height: 1.55;
-  color: #333;
-  display: -webkit-box;
-  -webkit-line-clamp: 5;
-  line-clamp: 5;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-.review-bubble.expanded .review-text { -webkit-line-clamp: unset; line-clamp: unset; display: block; }
-.review-more {
-  background: none; border: none; padding: 0; margin-top: 4px;
-  font-family: var(--font); font-size: 14px; color: var(--text-faint);
-  cursor: pointer; text-decoration: underline; text-underline-offset: 2px;
-}
-.review-more[hidden] { display: none; }
-.review-author { display: flex; align-items: center; gap: 12px; }
-.review-author img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
-.review-initial {
-  width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
-  display: flex; align-items: center; justify-content: center;
-  color: #fff; font-size: 18px; font-weight: 600;
-}
-.reviews-load { display: flex; justify-content: center; margin-top: 32px; }
-.reviews-load-btn { border: none; font-family: var(--font); cursor: pointer; }
-.reviews-load-btn[hidden] { display: none; }
-.review-author-name { font-size: 15px; font-weight: 700; }
-.review-author-src { font-size: 13px; color: var(--text-faint); }
-.review-author-src .g { font-weight: 700; }
-.review-author-src .g b:nth-child(1), .review-author-src .g b:nth-child(4) { color: #4285F4; }
-.review-author-src .g b:nth-child(2), .review-author-src .g b:nth-child(6) { color: #EA4335; }
-.review-author-src .g b:nth-child(3) { color: #FBBC05; }
-.review-author-src .g b:nth-child(5) { color: #34A853; }
-.reviews-more-link { text-align: center; margin-top: 28px; }
-.reviews-more-link a { color: var(--accent-dark); font-weight: 700; text-decoration: none; }
-.reviews-more-link a:hover { text-decoration: underline; }
 
 /* ---------- RESPONSIVE ---------- */
-@media (max-width: 420px) {
-  .guarantee { flex-direction: column; text-align: center; }
-}
-/* Phones: trim the hero so the form starts near the top of the screen. */
-@media (max-width: 699px) {
-  .site-header .trust-bar { display: none; }
-  .section-hero { padding-top: 24px; }
-  .hero-txt { gap: 12px; }
-  .hero-rule, .hero-points { display: none; }
-  p.hero-sub { font-size: 16px; }
-  .guarantee { max-width: none; }
+@media (min-width: 550px) {
+  .cta-form-nav { display: flex; }
 }
 @media (min-width: 700px) {
-  :root { --fs-h1: 44px; --side-padding: 32px; }
-  .trust-bar ul { grid-template-columns: repeat(4, 1fr); }
-  .trust-bar li { border-bottom: none; font-size: 14px; }
-  .trust-bar li:nth-child(2n) { border-right: 1px solid rgba(255, 255, 255, 0.18); }
-  .trust-bar li:last-child { border-right: none; }
-  .header-reviews { display: flex; }
-  .services-title { font-size: 36px; }
-  .header-phone { align-items: center; }
-  .header-phone-number { font-size: 28px; }
-  .main-logo img { height: 60px; }
+  .packages-grid { grid-template-columns: repeat(3, 1fr); }
+  .vehicle-grid { grid-template-columns: repeat(3, 1fr); }
+  .gallery-grid { grid-template-columns: repeat(3, 1fr); }
+  .reviews-grid { grid-template-columns: repeat(3, 1fr); }
+  .jordan-wrap { flex-direction: row; align-items: center; }
 }
-@media (min-width: 1000px) {
-  :root { --fs-h1: 46px; --section-padding: 72px; --side-padding: 48px; }
-  .desktop-img { display: block !important; }
-  .mobile-img { display: none !important; }
-  .section-hero { padding-top: 32px; padding-bottom: 32px; }
-  .hero-inner {
-    grid-template-columns: minmax(0, 1fr) 500px;
-    grid-template-areas: "txt form" "guar form";
-    column-gap: 56px;
-    row-gap: 18px;
+@media (min-width: 900px) {
+  header { position: fixed; top: 0; left: 0; width: 100%; z-index: 900; }
+  nav { position: static; }
+  main { padding-top: 100px; }
+  .section-hero {
+    flex-direction: row; align-items: center; gap: 56px;
+    padding-left: max(var(--side-padding), calc((100% - 1100px) / 2));
+    padding-right: max(var(--side-padding), calc((100% - 1100px) / 2));
   }
-  .hero-txt { grid-area: txt; align-self: end; gap: 14px; }
-  .estimate-card { grid-area: form; align-self: center; }
-  .guarantee { grid-area: guar; align-self: start; padding: 12px 18px 12px 12px; }
+  .hero-txt { width: auto; flex: 1 1 0; min-width: 0; justify-content: center; }
+  .hero-form { width: auto; flex: 0 0 480px; }
+  .desktop-img { display: block; }
+  .mobile-img { display: none; }
+  :root { --side-padding: 48px; --flex-direction: row; }
+}
+@media (min-width: 900px) {
   .mobile-cta-bar { display: none; }
   body { padding-bottom: 0; }
-  .results-grid { grid-template-columns: repeat(3, 1fr); }
-  .guarantee-seal { width: 96px; height: 96px; }
-  .services-grid { grid-template-columns: repeat(4, 1fr); }
-  .why-inner { flex-direction: row; align-items: center; gap: 40px; }
-  .why-media { flex: 0 0 600px; }
-  .why-content { flex: 1 1 0; min-width: 0; }
-  .why-title { font-size: 42px; }
-  .results-title { font-size: 42px; }
-  .reviews-grid { grid-template-columns: repeat(3, 1fr); }
-  .reviews-title { font-size: 38px; }
+}
+@media (min-width: 1200px) {
+  :root { --side-padding: 64px; }
+}
+/* Compact review bubbles on phones (kept last so it overrides the base review styles) */@media (max-width: 699px) {
+  .reviews-grid { gap: 20px 12px; }
+  .review-bubble { padding: 14px 14px 12px; border-radius: 18px; margin-bottom: 14px; }
+  .review-bubble::after { left: 18px; }
+  .review-bubble .stars { font-size: 14px; letter-spacing: 1px; margin-bottom: 6px; }
+  .review-text { font-size: 13px; line-height: 1.5; -webkit-line-clamp: 6; line-clamp: 6; }
+  .review-more { font-size: 12px; }
+  .review-author { gap: 8px; }
+  .review-author img, .review-initial { width: 32px; height: 32px; font-size: 15px; }
+  .review-author-name { font-size: 13px; line-height: 1.25; }
+  .review-author-src { font-size: 12px; }
 }
 
-/* ---------- FOLD SHELL (v3) ---------- */
-.fold { background: #F7F7F7; padding: 48px var(--side-padding); scroll-margin-top: 0; }
-.fold-white { background: var(--bg-light); }
-.fold-inner { max-width: 1200px; margin: 0 auto; }
-.fold-head { text-align: center; margin-bottom: 28px; }
-.fold-head .google-badge { width: 170px; height: auto; display: block; margin: 0 auto 12px; }
-.fold-title { font-size: 30px; font-weight: 500; line-height: 1.2; margin-bottom: 8px; text-wrap: balance; }
-.fold-title strong { font-weight: 800; }
-.fold-sub { font-size: 16px; color: var(--text-muted); max-width: 62ch; margin: 0 auto; text-wrap: pretty; }
-.fold-sub a { color: var(--accent-dark); font-weight: 700; }
-.fold-ctas { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px 30px; margin-top: 32px; }
-.fold-ctas.left { justify-content: flex-start; }
-
-/* Header without a reviews link: logo + phone only */
-.header-badge { display: none; flex-direction: column; align-items: center; gap: 6px; }
-.header-badge img { width: 150px; height: auto; }
-.header-badge p { font-size: 12px; }
-
-/* ---------- SERVICES (v3) ---------- */
-.services-grid { text-align: center; }
-.services-grid li { position: relative; }
-.service-badge {
-  position: absolute; top: 10px; left: 10px; z-index: 1;
-  background: var(--accent); color: var(--text-light);
-  font-size: 12px; font-weight: 700;
-  padding: 4px 12px; border-radius: var(--radius-pill);
-}
-.service-desc { font-size: 13px; color: var(--text-muted); line-height: 1.5; max-width: 30ch; margin: 4px auto 0; }
-
-/* ---------- BEFORE / AFTER ---------- */
-.ba-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
-.ba {
-  --pos: 50%;
-  position: relative;
-  aspect-ratio: 700 / 469;
-  overflow: hidden;
-  border-radius: var(--radius);
-  background: var(--bg-dark);
-  user-select: none;
-  touch-action: pan-y;
-}
-.ba img {
-  position: absolute; inset: 0;
-  width: 100%; height: 100%;
-  object-fit: cover;
-  pointer-events: none;
-}
-.ba .ba-before { clip-path: inset(0 calc(100% - var(--pos)) 0 0); }
-.ba-line {
-  position: absolute; top: 0; bottom: 0;
-  left: var(--pos);
-  width: 3px;
-  margin-left: -1.5px;
-  background: #fff;
-  pointer-events: none;
-}
-.ba-handle {
-  position: absolute; top: 50%; left: 50%;
-  width: 44px; height: 44px;
-  margin: -22px 0 0 -22px;
-  border: 3px solid #fff;
-  border-radius: 50%;
-  background: rgba(0, 0, 0, 0.25);
-  display: flex; align-items: center; justify-content: center; gap: 4px;
-}
-.ba-handle::before, .ba-handle::after { content: ''; border: 6px solid transparent; }
-.ba-handle::before { border-right: 7px solid #fff; border-left: none; }
-.ba-handle::after { border-left: 7px solid #fff; border-right: none; }
-.ba-label, .ba-tag {
-  position: absolute; top: 12px;
-  background: rgba(40, 40, 40, 0.75);
-  color: #fff;
-  font-size: 13px;
-  padding: 5px 12px;
-  pointer-events: none;
-}
-.ba-label { left: 12px; }
-.ba-tag { right: 12px; }
-.ba input[type="range"] {
-  position: absolute; inset: 0;
-  width: 100%; height: 100%;
-  margin: 0;
-  opacity: 0;
-  cursor: ew-resize;
-  -webkit-appearance: none;
-  appearance: none;
-}
-.ba input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 44px; height: 100%; }
-.ba:has(input:focus-visible) .ba-handle { outline: 2px solid var(--accent); outline-offset: 3px; }
-
-/* ---------- WHY US (v3) ---------- */
-
-/* ---------- HOW IT WORKS ---------- */
-.steps { list-style: none; display: grid; grid-template-columns: 1fr; gap: 16px; }
-.step {
-  background: var(--bg-light);
-  border-radius: var(--radius);
-  padding: 24px 22px;
-  text-align: center;
-}
-.step-num {
-  width: 46px; height: 46px; border-radius: 50%;
-  background: var(--accent-tint2); color: var(--accent-dark);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 20px; font-weight: 800;
-  margin: 0 auto 12px;
-}
-.step h3 { font-size: 18px; font-weight: 800; margin-bottom: 6px; }
-.step p { font-size: 15px; line-height: 1.55; color: var(--text-muted); }
-.step .step-num { font-size: 20px; line-height: 1; color: #fff; }
-
-/* ---------- FAQ ---------- */
-.faq-list { display: flex; flex-direction: column; gap: 10px; max-width: 820px; margin: 0 auto; }
-.faq-item { border: 1.5px solid var(--border); border-radius: var(--radius); overflow: hidden; background: var(--bg-light); }
-.faq-q {
-  display: flex; align-items: center; justify-content: space-between;
-  width: 100%; text-align: left; padding: 18px 20px; cursor: pointer;
-  font-size: 16px; font-weight: 700; gap: 12px;
-  background: none; border: none; font-family: var(--font); color: var(--text);
-}
-.faq-q:hover { background: #F7F7F7; }
-.faq-chevron { width: 20px; height: 20px; flex-shrink: 0; color: var(--accent-dark); transition: transform 0.25s var(--ease-out-quart); }
-.faq-q[aria-expanded="true"] .faq-chevron { transform: rotate(180deg); }
-.faq-a {
-  display: grid;
-  grid-template-rows: 0fr;
-  transition: grid-template-rows 0.3s var(--ease-out-quart);
-}
-.faq-a.open { grid-template-rows: 1fr; }
-.faq-a-inner { overflow: hidden; font-size: 15px; color: var(--text-muted); line-height: 1.65; padding: 0 20px; }
-.faq-a.open .faq-a-inner { padding: 0 20px 18px; }
-
-/* ---------- FINAL CTA ---------- */
-.fold-final {
-  background-color: #0c2048;
-  background-image: linear-gradient(var(--hero-overlay), var(--hero-overlay)), linear-gradient(135deg, #1c1c1c, #070707);
-  background-size: cover;
-  background-position: center;
-  color: var(--text-light);
-  text-align: center;
-  padding: 56px var(--side-padding);
-}
-.final-title { font-size: 30px; font-weight: 800; line-height: 1.2; margin-bottom: 10px; text-wrap: balance; }
-.final-sub { font-size: 17px; opacity: 0.9; margin-bottom: 4px; }
-.fold-final .btn-call { background: var(--bg-light); color: var(--text); }
-.final-trust { font-size: 14px; opacity: 0.85; margin-top: 20px; }
-
-/* ---------- FOOTER ---------- */
-.site-footer { background: #111; color: #bbb; text-align: center; padding: 28px 20px; font-size: 14px; line-height: 1.8; }
-.site-footer a { color: inherit; }
-.site-footer .footer-phone { color: var(--text-light); font-weight: 700; text-decoration: none; font-size: 16px; }
-
-@media (min-width: 700px) {
-  .header-badge { display: flex; }
-}
-@media (min-width: 1000px) {
-  .hero-inner { grid-template-areas: "txt form"; }
-  .hero-txt { align-self: center; }
-  .fold { padding: 64px var(--side-padding); }
-  .fold-title { font-size: 40px; }
-  .ba-grid { grid-template-columns: 1fr 1fr; }
-  .steps { grid-template-columns: repeat(3, 1fr); gap: 24px; }
-  .final-title { font-size: 42px; }
-}
-
-/* ---------- GRIT N GRIND THEME ---------- */
+/* ================= GRIT N GRIND THEME ================= */
 :root {
   --accent: #E3120B;
   --accent-dark: #A80C07;
   --accent-tint: #FDECEB;
   --accent-tint2: #F9D3D1;
-  --hero-overlay: rgba(8, 8, 8, 0.82);
   --display: 'Oswald', 'DM Sans', sans-serif;
+  --red-check: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14' fill='none'%3E%3Cpath d='M3 7.5L5.5 10L11 5' stroke='%23E3120B' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
 }
-.site-header { background: #0a0a0a; border-bottom: 2px solid var(--accent); }
-.trust-bar { background: #151515; }
+
+/* Nav: black bar with a text logo */
+nav { background-color: #0a0a0a; border-bottom: 2px solid var(--accent); }
 .text-logo {
-  font-family: var(--display); font-weight: 700; font-size: 26px; line-height: 1;
-  color: #fff; text-decoration: none; text-transform: uppercase; font-style: italic; letter-spacing: 0.01em;
-  display: flex; flex-direction: column;
+  display: flex; flex-direction: column; justify-content: center;
+  font-family: var(--display); font-weight: 700; font-style: italic; text-transform: uppercase;
+  font-size: 28px; line-height: 1; letter-spacing: 0.01em;
+  color: #fff; text-decoration: none;
 }
 .text-logo .n { color: var(--accent); }
-.text-logo small { font-size: 11px; font-style: normal; letter-spacing: 0.32em; color: #bbb; font-weight: 500; margin-top: 3px; }
-.header-phone, .header-phone-sub { color: #fff; }
-.header-phone-number { color: #fff; text-decoration-color: var(--accent); }
-.header-phone:hover .header-phone-number { color: var(--accent); }
-.header-tag { display: none; font-family: var(--display); text-transform: uppercase; letter-spacing: 0.18em; font-size: 13px; color: #ddd; text-align: center; }
-.header-tag span { display: block; color: var(--accent); }
+.text-logo small { font-size: 11px; font-style: normal; font-weight: 500; letter-spacing: 0.32em; color: #bbb; margin-top: 4px; }
+nav .cta-phone { background-color: #222; color: #fff; }
+nav .cta-phone .icon { filter: invert(1); }
 
-.section-hero { background-color: #080808; }
-h1.hero-h1, .fold-title strong, .why-title strong, .final-title, .estimate-title, .pkg-name {
+/* Hero: their truck photo behind a near-black overlay */
+.section-hero {
+  background-color: #080808;
+  background-image: linear-gradient(rgba(8, 8, 8, 0.78), rgba(8, 8, 8, 0.78)), url('images/hero-f450-wide.jpg');
+}
+.hero-tagline {
+  font-family: var(--display); font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.22em; font-size: 14px; color: var(--accent);
+}
+h1.hero-h1, .section-title, .estimate-title, .pkg-name, .section-final h2 {
   font-family: var(--display); text-transform: uppercase; letter-spacing: 0.01em;
 }
 h1.hero-h1 { font-weight: 700; font-style: italic; }
-.hero-tagline { font-family: var(--display); text-transform: uppercase; letter-spacing: 0.22em; font-size: 14px; color: var(--accent); font-weight: 600; }
-.price-line strong { color: #ff6b63; }
-.estimate-submit, .btn-quote, .mobile-cta-bar .bar-quote { background: linear-gradient(#ef2a22, var(--accent-dark)); }
+.section-title { font-weight: 700; }
+.pkg-name { font-style: italic; font-size: 22px; }
+.pkg-name span { color: var(--accent); }
+
+/* Red checkmarks and red buttons */
+.trust-item .check, .pkg-list li::before, .hero-points li::before { background-image: var(--red-check); }
 .estimate-submit { box-shadow: 0 8px 18px rgba(227, 18, 11, 0.35); }
 .btn-call, .mobile-cta-bar .bar-call { background: #0a0a0a; color: #fff; }
-.form-note { color: var(--accent-dark); }
-.fold-final { background-color: #080808; border-top: 3px solid var(--accent); }
-.fold-final .btn-call { background: #fff; color: #0a0a0a; }
-.site-footer { background: #000; }
-.step-num { background: var(--accent); color: #fff; }
+.section-final { background: #080808; border-top: 3px solid var(--accent); }
+.section-final .btn-call { background: #fff; color: #0a0a0a; }
+.section-footer { background-color: #000; }
 
-/* Packages */
-.pkg-grid { list-style: none; display: grid; grid-template-columns: 1fr; gap: 18px; }
-.pkg {
+/* Team photo is a wide driveway shot, so show it as a rounded rectangle, not a small circle */
+#team .jordan-photo {
   position: relative;
-  display: flex; flex-direction: column;
-  background: #0d0d0d; color: #fff;
-  border: 2px solid #2a2a2a;
+  width: 100%; max-width: 440px;
+  height: auto; min-height: 0;
+  aspect-ratio: 4 / 3;
   border-radius: var(--radius);
-  padding: 26px 22px 22px;
 }
-.pkg.featured { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent), 0 14px 34px rgba(227, 18, 11, 0.25); }
-.pkg-badge {
-  position: absolute; top: -13px; left: 50%; transform: translateX(-50%);
-  background: var(--accent); color: #fff;
-  font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
-  padding: 5px 14px; border-radius: var(--radius-pill); white-space: nowrap;
-}
-.pkg-name { font-size: 30px; font-weight: 700; font-style: italic; line-height: 1; }
-.pkg-name span { color: var(--accent); }
-.pkg-price { font-size: 17px; font-weight: 700; margin: 10px 0 12px; text-transform: uppercase; }
-.pkg-price strong { font-family: var(--display); color: var(--accent); font-size: 32px; }
-.pkg-meta { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 13px; color: #bbb; margin-bottom: 14px; }
-.pkg-meta span { display: inline-flex; align-items: center; gap: 6px; }
-.pkg-meta svg { width: 15px; height: 15px; flex-shrink: 0; }
-.pkg-for { font-size: 14px; font-weight: 700; text-transform: uppercase; color: #eee; margin-bottom: 10px; line-height: 1.4; }
-.pkg-list { list-style: none; display: flex; flex-direction: column; gap: 7px; margin-bottom: 18px; }
-.pkg-list li { display: flex; gap: 9px; font-size: 14px; color: #ddd; line-height: 1.4; }
-.pkg-list li::before { content: '✓'; color: var(--accent); font-weight: 800; }
-.pkg-suv {
-  margin-top: auto;
-  background: var(--accent); color: #fff;
-  text-align: center; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em;
-  padding: 10px; border-radius: 8px; font-size: 14px;
-}
-.pkg-cta { display: block; text-align: center; margin-top: 10px; padding: 13px; border-radius: 8px; background: #fff; color: #0a0a0a; font-weight: 800; text-decoration: none; }
-.pkg-cta:hover { background: #f1f1f1; }
-
-.why-list li { align-items: center; }
-.why-icon {
-  width: 52px; height: 52px; border-radius: 12px; flex-shrink: 0;
-  background: #0a0a0a; color: var(--accent);
-  display: flex; align-items: center; justify-content: center;
-}
-.why-icon svg { width: 28px; height: 28px; }
-
-/* Placeholders */
-.ph {
-  width: 100%; height: 100%;
-  min-height: 160px;
-  display: flex; align-items: center; justify-content: center;
-  text-align: center;
-  padding: 16px;
-  background: repeating-linear-gradient(45deg, #1b1b1b, #1b1b1b 12px, #222 12px, #222 24px);
-  color: #9a9a9a;
-  font-size: 14px;
-  font-weight: 600;
-}
-/* Hero photo: F-450 under a dark overlay */
-/* Phones: the form fills most of the hero, so pin the truck behind the headline and fade to black below it. */
-.section-hero {
-  background-image:
-    linear-gradient(rgba(8, 8, 8, 0.72) 0, rgba(8, 8, 8, 0.82) 380px, #080808 560px),
-    url("images/hero-f450-wide.jpg");
-  background-size: 100% 100%, auto 560px;
-  background-position: center, 30% top;
-  background-repeat: no-repeat;
-}
-@media (min-width: 760px) {
-  .section-hero { background-size: 100% 100%, 100% auto; }
-}
-@media (min-width: 1000px) {
-  .section-hero {
-    background-image:
-      linear-gradient(90deg, rgba(8, 8, 8, 0.86) 0%, rgba(8, 8, 8, 0.66) 55%, rgba(8, 8, 8, 0.8) 100%),
-      url("images/hero-f450-wide.jpg");
-    background-size: cover;
-    background-position: center 55%;
-  }
+#team .jordan-photo img {
+  position: absolute; inset: 0;
+  object-position: 62% 55%;
 }
 
-/* Results photos are portrait phone shots: show them uncropped at 3:4 */
-.results-grid li { aspect-ratio: 3 / 4; }
+/* Two vehicle sizes instead of three */
+@media (min-width: 700px) { .vehicle-grid { grid-template-columns: repeat(2, 1fr); } }
 
-.form-success { text-align: center; padding: 28px 8px 8px; }
-.form-success h3 { font-size: 22px; font-weight: 800; margin-bottom: 8px; }
-.form-success p { color: var(--text-muted); }
-
-@media (min-width: 1000px) {
-  .hero-inner { grid-template-areas: "txt form" "guar form"; }
-  .hero-txt { align-self: end; }
-  .guarantee { align-self: start; }
-  .results-grid { grid-template-columns: repeat(4, 1fr); gap: 16px; }
-}
-@media (min-width: 900px) {
-  .header-tag { display: block; }
-  .pkg-grid { grid-template-columns: repeat(3, 1fr); align-items: stretch; }
-}
+/* Inline thank-you shown in place of the form after it sends */
+.form-success { text-align: center; padding: 18px 4px 6px; }
+.form-success h3 { font-family: var(--display); text-transform: uppercase; font-size: 24px; margin-bottom: 8px; }
+.form-success p { color: var(--text-muted); margin-bottom: 14px; }
+.form-success .btn-call { margin: 0 auto; }
     </style>
   </head>
   <body>
     <a href="#main" class="skip-link">Skip to main content</a>
+    <div id="top" aria-hidden="true"></div>
+    <div id="nav-sentinel" aria-hidden="true" style="position: absolute; top: 0; left: 0; height: 1px; width: 1px; pointer-events: none;"></div>
 
-    <header class="site-header">
-      <div class="header-inner">
-        <!-- TODO: swap the text logo for the real logo image: <img src="logo.png" alt="Grit N Grind Auto Care"> -->
-        <a href="#top" class="text-logo" id="top">
+    <header>
+      <nav>
+        <!-- TODO: swap the text logo for the real logo image when you have it -->
+        <a href="#top" class="text-logo">
           <span>Grit <span class="n">N</span> Grind</span>
           <small>Auto Care</small>
         </a>
-        <p class="header-tag">Cleaner cars. <span>Better drives.</span></p>
-        <!-- TODO: real phone number (both the tel: link and the text) -->
-        <a href="tel:+16023505833" class="header-phone" aria-label="Call Grit N Grind Auto Care at (602) 350-5833">
-          <span class="header-phone-number">(602) 350-5833</span>
-          <span class="header-phone-sub"><strong>Call or Text</strong> for A Quote</span>
-        </a>
-      </div>
-      <div class="trust-bar">
-        <ul>
-          <li>Quality Products</li>
-          <li>Detailing Done Right</li>
-          <li>No Deposit, Pay After</li>
-          <li>Satisfaction Guaranteed</li>
-        </ul>
-      </div>
+        <div class="ctas">
+          <a href="tel:+16023505833" class="cta-phone" aria-label="Call Grit N Grind Auto Care at (602) 350-5833">
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z'/%3E%3C/svg%3E" alt="" class="icon" width="18" height="18">
+            (602) 350-5833
+          </a>
+          <a href="#quote" class="cta-form cta-form-nav">Get a free quote</a>
+        </div>
+      </nav>
     </header>
 
     <main id="main">
-      <!-- FOLD 1: HERO + FORM -->
-      <section class="section-hero" aria-labelledby="hero-title">
-        <div class="hero-inner">
-          <div class="hero-txt">
-            <p class="hero-rating"><span class="stars" aria-hidden="true">★★★★★</span><span>5-star rated on Google</span></p>
-            <p class="hero-tagline">The grind never stops</p>
-            <h1 class="hero-h1" id="hero-title">Mobile Detailing Done Right</h1>
-            <hr class="hero-rule">
-            <p class="hero-sub">We bring professional detailing to your home or work in Tempe, Mesa, Chandler, Sun Lakes, Gilbert and Queen Creek. Clean, fresh, and looking almost brand new, without you leaving the driveway.</p>
-            <ul class="hero-points">
-              <li>Interior and exterior detailing</li>
-              <li>No deposit. Pay when you're happy.</li>
-              <li>Mobile service, we bring the water</li>
-            </ul>
-            <p class="price-line">
-              <span>Full Reset from <strong>$150</strong></span>
-              <span>Showroom from <strong>$250</strong></span>
-              <span>SUVs &amp; trucks <strong>+$20</strong></span>
-            </p>
-          </div>
-
-          <div class="guarantee">
-            <svg class="guarantee-seal" viewBox="0 0 120 120" role="img" aria-label="100% satisfaction guarantee seal">
-              <defs>
-                <radialGradient id="seal-red" cx="40%" cy="35%" r="70%">
-                  <stop offset="0%" stop-color="#ff5a52"/>
-                  <stop offset="55%" stop-color="#E3120B"/>
-                  <stop offset="100%" stop-color="#8a0905"/>
-                </radialGradient>
-                <path id="seal-arc-top" d="M 20 60 A 40 40 0 0 1 100 60"/>
-                <path id="seal-arc-bottom" d="M 16 60 A 44 44 0 0 0 104 60"/>
-              </defs>
-              <circle cx="60" cy="60" r="58" fill="url(#seal-red)"/>
-              <circle cx="60" cy="60" r="52" fill="none" stroke="#ffffff" stroke-opacity="0.5" stroke-width="1.5"/>
-              <circle cx="60" cy="60" r="31" fill="#0a0a0a" stroke="#ffffff" stroke-width="2.5"/>
-              <text font-family="Oswald, DM Sans, sans-serif" font-size="9.5" font-weight="700" fill="#ffffff" letter-spacing="1.2">
-                <textPath href="#seal-arc-top" startOffset="50%" text-anchor="middle">SATISFACTION</textPath>
-              </text>
-              <text font-family="Oswald, DM Sans, sans-serif" font-size="9.5" font-weight="700" fill="#ffffff" letter-spacing="1.2">
-                <textPath href="#seal-arc-bottom" startOffset="50%" text-anchor="middle">GUARANTEED</textPath>
-              </text>
-              <text x="60" y="67" text-anchor="middle" font-family="Oswald, DM Sans, sans-serif" font-size="19" font-weight="700" fill="#ffffff">100%</text>
-            </svg>
-            <p>We are proud of our work and provide a <strong>satisfaction guarantee.</strong> If you are not happy based on the expectations we laid out, we will come back and reclean free of charge.</p>
-          </div>
+      <!-- 1. HERO -->
+      <section class="section-hero">
+        <div class="hero-txt">
+          <p class="trust-line">
+            <span class="stars" aria-hidden="true">★★★★★</span>
+            <span>5-star rated on Google</span>
+            <span class="dot" aria-hidden="true">·</span>
+            <span>East Valley, AZ</span>
+          </p>
+          <p class="hero-tagline">The grind never stops</p>
+          <h1 class="hero-h1">Mobile detailing done right</h1>
+          <p class="hero-sub">We come to your home or work in Tempe, Mesa, Chandler, Sun Lakes, Gilbert and Queen Creek and detail your car inside and out, so it looks almost brand new again.</p>
+          <ul class="hero-points">
+            <li>We come to you and bring our own water</li>
+            <li>Full Reset from $150, Showroom from $250</li>
+            <li>No deposit. Pay when you're happy.</li>
+          </ul>
+        </div>
+        <div class="hero-form">
           <div class="estimate-card" id="quote">
             <h2 class="estimate-title">Get a Free Quote</h2>
             <!-- TODO: create a free form at formspree.io and paste its URL into action="" -->
             <form action="https://formspree.io/f/YOUR_FORM_ID" method="POST" class="estimate-form" id="quoteForm">
               <input type="hidden" name="_subject" value="New quote request (Grit N Grind)">
+
+              <div class="field-row field">
+                <label for="name" class="visually-hidden">Name</label>
+                <input type="text" id="name" name="name" placeholder="Name*" autocomplete="name" required>
+              </div>
+              <div class="field-row field">
+                <label for="phone" class="visually-hidden">Phone Number</label>
+                <input type="tel" id="phone" name="phone" placeholder="Phone Number*" autocomplete="tel" required>
+              </div>
 
               <fieldset>
                 <legend>Package: <span class="legend-optional">(optional)</span></legend>
@@ -969,40 +846,183 @@ h1.hero-h1 { font-weight: 700; font-style: italic; }
                 </div>
               </fieldset>
 
-              <div class="field-row">
-                <div class="field">
-                  <label for="name" class="visually-hidden">Name</label>
-                  <input type="text" id="name" name="name" placeholder="Name*" autocomplete="name" required>
-                </div>
-              </div>
-              <div class="field-row">
-                <div class="field">
-                  <label for="phone" class="visually-hidden">Phone Number</label>
-                  <input type="tel" id="phone" name="phone" placeholder="Phone Number*" autocomplete="tel" required>
-                </div>
-              </div>
-              <div class="field-row">
-                <div class="field">
-                  <label for="vehicle" class="visually-hidden">Vehicle (optional)</label>
-                  <input type="text" id="vehicle" name="vehicle" placeholder="Vehicle, e.g. 2020 Dodge Charger (optional)">
-                </div>
+              <div class="field-row field">
+                <label for="vehicle" class="visually-hidden">Vehicle (optional)</label>
+                <input type="text" id="vehicle" name="vehicle" placeholder="Vehicle, e.g. 2020 Dodge Charger (optional)">
               </div>
               <p class="form-note">We'll get in touch shortly with your quote.</p>
 
               <button type="submit" class="estimate-submit" aria-live="polite">Get My Free Quote</button>
-              <p class="form-error" id="formError" role="alert" hidden>Something went wrong sending your request. Please try again or give us a call.</p>
+              <p class="form-error" id="formError" role="alert" hidden>Something went wrong sending your request. Please try again or call us at (602) 350-5833.</p>
+
+              <figure class="form-review">
+                <img src="images/review-jamari.png" alt="" width="40" height="40" loading="lazy">
+                <div>
+                  <p class="form-review-stars" aria-label="5 out of 5 stars">★★★★★</p>
+                  <blockquote>"Came out better than anticipated given the pricing."</blockquote>
+                  <figcaption>Jamari Lee, Google review</figcaption>
+                </div>
+              </figure>
             </form>
           </div>
         </div>
       </section>
 
-      <!-- FOLD 2: REVIEWS -->
-      <section class="fold" id="reviews" aria-labelledby="reviews-title">
-        <div class="fold-inner reviews-inner">
-          <div class="fold-head">
-            <h2 class="fold-title" id="reviews-title">What Our <strong>Customers Say</strong></h2>
-            <p class="fold-sub">5-star reviews from real customers on Google.</p>
+      <!-- 2. TRUST STRIP -->
+      <section class="section-trust" aria-label="Why customers trust us">
+        <div class="trust-grid">
+          <p class="trust-item" data-reveal style="--i: 0"><span class="check" aria-hidden="true"></span>No deposit, pay after</p>
+          <p class="trust-item" data-reveal style="--i: 1"><span class="check" aria-hidden="true"></span>Satisfaction guaranteed</p>
+          <p class="trust-item" data-reveal style="--i: 2"><span class="check" aria-hidden="true"></span>We bring the water &amp; equipment</p>
+          <p class="trust-item" data-reveal style="--i: 3"><span class="check" aria-hidden="true"></span>Free quote in 30 seconds</p>
+        </div>
+      </section>
+
+      <!-- 3. PRICING -->
+      <section class="section" id="pricing" aria-labelledby="pricing-title">
+        <div class="section-inner">
+          <p class="section-eyebrow">Transparent pricing</p>
+          <h2 class="section-title" id="pricing-title">Our packages</h2>
+          <p class="section-subtext">Pick your vehicle size to see your price, then get your free quote. No deposit, you pay after.</p>
+
+          <div class="vehicle-grid" role="group" aria-label="Select your vehicle size">
+            <button type="button" class="vehicle-btn" aria-pressed="true" onclick="selectVehicle(this, 'car')">
+              <div class="v-name">Car / Sedan</div>
+              <div class="v-eg">e.g. Dodge Charger, Tesla Model 3, Honda Accord</div>
+            </button>
+            <button type="button" class="vehicle-btn" aria-pressed="false" onclick="selectVehicle(this, 'suv')">
+              <div class="v-name">SUV / Truck (+$20)</div>
+              <div class="v-eg">e.g. Dodge Durango, Ford F-150, Chevy Tahoe</div>
+            </button>
           </div>
+
+          <div class="packages-grid">
+            <div class="pkg" data-reveal style="--i: 0">
+              <p class="pkg-name">The <span>Refresh</span></p>
+              <p class="pkg-tagline">Maintenance detail for vehicles we've already detailed. Returning clients only · 1–2 hours</p>
+              <p class="pkg-price" id="price-refresh">$110</p>
+              <p class="pkg-price-note">starting price · SUVs &amp; trucks +$20</p>
+              <details class="pkg-details"><summary>What's included</summary>
+              <ul class="pkg-list">
+                <li>Full vacuum</li>
+                <li>Interior wipe-down</li>
+                <li>Dash, console &amp; door panels</li>
+                <li>Cupholders &amp; crevices</li>
+                <li>Interior glass</li>
+                <li>Floors &amp; mats cleaned</li>
+                <li>Light interior finishing</li>
+                <li>Hand wash</li>
+                <li>Wheels &amp; tires</li>
+                <li>Tire dressing</li>
+                <li>Exterior glass</li>
+                <li>Drying &amp; final touch-up</li>
+              </ul>
+              </details>
+              <a href="#quote" class="pkg-book" data-service="The Refresh">Get my free quote</a>
+            </div>
+            <div class="pkg featured" data-reveal style="--i: 1">
+              <span class="pkg-badge">Most popular</span>
+              <p class="pkg-name">The Full <span>Reset</span></p>
+              <p class="pkg-tagline">Our main package for most customers. A thorough interior and exterior detail · 1.5–3 hours</p>
+              <p class="pkg-price" id="price-reset">$150</p>
+              <p class="pkg-price-note">starting price · SUVs &amp; trucks +$20</p>
+              <details class="pkg-details"><summary>What's included</summary>
+              <p class="pkg-section-label">Interior</p>
+              <ul class="pkg-list">
+                <li>Full vacuum</li>
+                <li>Thorough interior wipe-down</li>
+                <li>Dash, console &amp; door panels</li>
+                <li>Cupholders &amp; crevices</li>
+                <li>Interior glass</li>
+                <li>Floors &amp; mats cleaned</li>
+                <li>Basic interior finishing</li>
+              </ul>
+              <p class="pkg-section-label">Exterior</p>
+              <ul class="pkg-list">
+                <li>Thorough hand wash</li>
+                <li>Wheels &amp; tires cleaned</li>
+                <li>Tire dressing</li>
+                <li>Exterior glass</li>
+                <li>Thorough drying</li>
+                <li>Exterior finishing &amp; touch-up</li>
+              </ul>
+              </details>
+              <a href="#quote" class="pkg-book" data-service="The Full Reset">Get my free quote</a>
+            </div>
+            <div class="pkg" data-reveal style="--i: 2">
+              <p class="pkg-name">The <span>Showroom</span></p>
+              <p class="pkg-tagline">For car enthusiasts and those who want the best · 2–3 hours</p>
+              <p class="pkg-price" id="price-showroom">$250</p>
+              <p class="pkg-price-note">starting price · SUVs &amp; trucks +$20</p>
+              <details class="pkg-details"><summary>What's included</summary>
+              <p class="pkg-section-label">Everything in the Full Reset, plus</p>
+              <ul class="pkg-list">
+                <li>Interior steam cleaning</li>
+                <li>Meticulous interior detailing</li>
+                <li>Detailed vents, buttons &amp; trim</li>
+                <li>Thorough crevice cleaning</li>
+                <li>Detailed interior finishing</li>
+                <li>Light spot treatment</li>
+                <li>Premium air freshener</li>
+                <li>Wheel wells</li>
+                <li>Emblems &amp; badges</li>
+                <li>Exterior trim &amp; crevices</li>
+                <li>Heavy bug &amp; tar removal</li>
+                <li>Paint decontamination</li>
+                <li>Clay treatment</li>
+                <li>Final inspection &amp; finishing</li>
+                <li>Gloss-enhancing final finish</li>
+              </ul>
+              </details>
+              <a href="#quote" class="pkg-book" data-service="The Showroom">Get my free quote</a>
+            </div>
+          </div>
+          <div class="section-ctas">
+            <a href="#quote" class="btn-quote">Get My Free Quote</a>
+            <a href="tel:+16023505833" class="btn-call" aria-label="Call Grit N Grind Auto Care at (602) 350-5833">(602) 350-5833</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. RESULTS GALLERY (interior photos first so mobile puts them in the left column) -->
+      <section class="section section-alt" id="gallery" aria-labelledby="gallery-title">
+        <div class="section-inner">
+          <p class="section-eyebrow">Recent work</p>
+          <h2 class="section-title" id="gallery-title">See the results</h2>
+          <p class="section-subtext">Real photos from recent jobs.</p>
+          <div class="gallery-grid">
+            <div class="media-slot gallery-slot" data-reveal style="--i: 0; border: none; padding: 0; overflow: hidden;">
+              <img src="images/work-alfa-rear-seats.jpg" alt="Clean red leather rear seats in an Alfa Romeo after an interior detail" width="750" height="1000" loading="lazy" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+            <div class="media-slot gallery-slot" data-reveal style="--i: 1; border: none; padding: 0; overflow: hidden;">
+              <img src="images/work-alfa-door.jpg" alt="White Alfa Romeo with the rear door open showing a spotless red interior" width="750" height="1000" loading="lazy" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+            <div class="media-slot gallery-slot" data-reveal style="--i: 2; border: none; padding: 0; overflow: hidden;">
+              <img src="images/original-alfa-front-seats.jpg" alt="Clean red leather front seats in an Alfa Romeo after an interior detail" width="1170" height="1560" loading="lazy" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+            <div class="media-slot gallery-slot" data-reveal style="--i: 3; border: none; padding: 0; overflow: hidden;">
+              <img src="images/work-f450.jpg" alt="Gray Ford F-450 Super Duty with a fresh, glossy finish after an exterior detail" width="750" height="1000" loading="lazy" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+            <div class="media-slot gallery-slot" data-reveal style="--i: 4; border: none; padding: 0; overflow: hidden;">
+              <img src="images/work-chevy-foam.jpg" alt="Lifted Chevy Silverado covered in foam during a hand wash in a customer's driveway" width="750" height="1000" loading="lazy" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+            <div class="media-slot gallery-slot" data-reveal style="--i: 5; border: none; padding: 0; overflow: hidden;">
+              <img src="images/original-tesla-foam-wash-detailer.jpg" alt="Grit N Grind detailer foam-washing a Tesla in a customer's driveway" width="1170" height="1560" loading="lazy" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+          </div>
+          <div class="section-ctas">
+            <a href="#quote" class="btn-quote">Get My Free Quote</a>
+            <a href="tel:+16023505833" class="btn-call" aria-label="Call Grit N Grind Auto Care at (602) 350-5833">(602) 350-5833</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. REVIEWS -->
+      <section class="section" id="reviews" aria-labelledby="reviews-title">
+        <div class="section-inner">
+          <p class="section-eyebrow">What customers say</p>
+          <h2 class="section-title" id="reviews-title">5-star reviews on Google</h2>
+          <p class="section-subtext">Real reviews from drivers across the Valley.</p>
           <ul class="reviews-grid">
             <li>
               <div class="review-bubble">
@@ -1104,259 +1124,108 @@ h1.hero-h1 { font-weight: 700; font-style: italic; }
             </li>
           </ul>
           <div class="reviews-load"><button type="button" class="btn-quote reviews-load-btn" id="reviewsLoadMore">Load more reviews</button></div>
-          <p class="reviews-more-link"><a href="https://maps.app.goo.gl/ZND5dP9kMp5toehn7" target="_blank" rel="noopener">See all reviews on Google →</a></p>
-          <div class="fold-ctas">
+          <p class="reviews-more"><a href="https://maps.app.goo.gl/ZND5dP9kMp5toehn7" target="_blank" rel="noopener">See all reviews on Google →</a></p>
+          <div class="section-ctas">
             <a href="#quote" class="btn-quote">Get My Free Quote</a>
             <a href="tel:+16023505833" class="btn-call" aria-label="Call Grit N Grind Auto Care at (602) 350-5833">(602) 350-5833</a>
           </div>
         </div>
       </section>
 
-      <!-- FOLD 3: PACKAGES -->
-      <section class="fold fold-white" id="packages" aria-labelledby="packages-title">
-        <div class="fold-inner">
-          <div class="fold-head">
-            <h2 class="fold-title" id="packages-title"><strong>Our Packages</strong></h2>
-            <p class="fold-sub">Simple, upfront starting prices. SUVs and trucks add $20.</p>
+      <!-- 6. MEET THE TEAM -->
+      <section class="section section-alt" id="team" aria-labelledby="team-title">
+        <div class="section-inner jordan-wrap">
+          <div class="jordan-photo">
+            <img src="images/team-tesla-foam.jpg" alt="Grit N Grind detailer foam-washing a Tesla in a customer's driveway" width="1000" height="1000" loading="lazy" style="width: 100%; height: 100%; object-fit: cover;">
           </div>
-          <ul class="pkg-grid">
-            <li class="pkg featured">
-              <span class="pkg-badge">Most popular</span>
-              <h3 class="pkg-name">The Full <span>Reset</span></h3>
-              <p class="pkg-price">Starting at <strong>$150</strong></p>
-              <p class="pkg-meta">
-                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>1.5–3 hours</span>
-                <span>New &amp; returning clients</span>
-              </p>
-              <p class="pkg-for">Our main package for most customers.</p>
-              <ul class="pkg-list">
-                <li>Full vacuum</li>
-                <li>Thorough interior wipe-down</li>
-                <li>Dash, console &amp; door panels</li>
-                <li>Cupholders &amp; crevices</li>
-                <li>Interior glass</li>
-                <li>Floors &amp; mats cleaned</li>
-                <li>Basic interior finishing</li>
-                <li>Thorough hand wash</li>
-                <li>Wheels &amp; tires cleaned</li>
-                <li>Tire dressing</li>
-                <li>Exterior glass</li>
-                <li>Thorough drying</li>
-                <li>Exterior finishing &amp; touch-up</li>
-              </ul>
-              <p class="pkg-suv">SUVs &amp; Trucks: +$20</p>
-              <a href="#quote" class="pkg-cta">Get a Quote</a>
-            </li>
-            <li class="pkg">
-              <span class="pkg-badge">For enthusiasts</span>
-              <h3 class="pkg-name">The <span>Showroom</span></h3>
-              <p class="pkg-price">Starting at <strong>$250</strong></p>
-              <p class="pkg-meta">
-                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>2–3 hours</span>
-                <span>For car enthusiasts &amp; those who want the best</span>
-              </p>
-              <p class="pkg-for">Everything in the Full Reset, plus:</p>
-              <ul class="pkg-list">
-                <li>Interior steam cleaning</li>
-                <li>Meticulous interior detailing</li>
-                <li>Detailed vents, buttons &amp; trim</li>
-                <li>Thorough crevice cleaning</li>
-                <li>Detailed interior finishing</li>
-                <li>Light spot treatment</li>
-                <li>Premium air freshener</li>
-                <li>Wheel wells</li>
-                <li>Emblems &amp; badges</li>
-                <li>Exterior trim &amp; crevices</li>
-                <li>Heavy bug &amp; tar removal</li>
-                <li>Paint decontamination</li>
-                <li>Clay treatment</li>
-                <li>Final inspection &amp; finishing</li>
-                <li>Gloss-enhancing final finish</li>
-              </ul>
-              <p class="pkg-suv">SUVs &amp; Trucks: +$20</p>
-              <a href="#quote" class="pkg-cta">Get a Quote</a>
-            </li>
-            <li class="pkg">
-              <span class="pkg-badge">Returning clients</span>
-              <h3 class="pkg-name">The <span>Refresh</span></h3>
-              <p class="pkg-price">Starting at <strong>$110</strong></p>
-              <p class="pkg-meta">
-                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>1–2 hours</span>
-                <span>Returning clients only</span>
-              </p>
-              <p class="pkg-for">Maintenance detail for vehicles we've already detailed.</p>
-              <ul class="pkg-list">
-                <li>Full vacuum</li>
-                <li>Interior wipe-down</li>
-                <li>Dash, console &amp; door panels</li>
-                <li>Cupholders &amp; crevices</li>
-                <li>Interior glass</li>
-                <li>Floors &amp; mats cleaned</li>
-                <li>Light interior finishing</li>
-                <li>Hand wash</li>
-                <li>Wheels &amp; tires</li>
-                <li>Tire dressing</li>
-                <li>Exterior glass</li>
-                <li>Drying &amp; final touch-up</li>
-              </ul>
-              <p class="pkg-suv">SUVs &amp; Trucks: +$20</p>
-              <a href="#quote" class="pkg-cta">Get a Quote</a>
-            </li>
-          </ul>
-          <div class="fold-ctas">
+          <div class="jordan-text">
+            <p class="section-eyebrow">Who's showing up at your door</p>
+            <h2 class="section-title" id="team-title">Meet Grit N Grind</h2>
+            <p><span class="jordan-name">Grit N Grind Auto Care</span> is a mobile detailing team serving Tempe, Mesa, Chandler, Sun Lakes, Gilbert and Queen Creek.</p>
+            <p>We bring the water, the equipment and pro-grade products, and we don't leave until it's done right. If you're not happy based on what we laid out, we come back and reclean it free.</p>
+          <div class="section-ctas left">
             <a href="#quote" class="btn-quote">Get My Free Quote</a>
             <a href="tel:+16023505833" class="btn-call" aria-label="Call Grit N Grind Auto Care at (602) 350-5833">(602) 350-5833</a>
           </div>
-        </div>
-      </section>
-
-      <!-- FOLD 4: RESULTS -->
-      <section class="fold" id="results" aria-labelledby="results-title">
-        <div class="fold-inner">
-          <div class="fold-head">
-            <h2 class="fold-title" id="results-title"><strong>Real Results</strong>, Every Time</h2>
-            <p class="fold-sub">From lifted trucks to leather interiors, recent jobs around the East Valley.</p>
-          </div>
-          <ul class="results-grid">
-            <li><img src="images/work-f450.jpg" alt="Gray Ford F-450 Super Duty with a fresh, glossy finish after an exterior detail" width="750" height="1000" loading="lazy"><span class="results-label">Exterior</span></li>
-            <li><img src="images/work-alfa-rear-seats.jpg" alt="Clean red leather rear seats in an Alfa Romeo after an interior detail" width="750" height="1000" loading="lazy"><span class="results-label">Interior</span></li>
-            <li><img src="images/work-alfa-door.jpg" alt="White Alfa Romeo with the rear door open showing a spotless red interior" width="750" height="1000" loading="lazy"><span class="results-label">Interior</span></li>
-            <li><img src="images/work-chevy-foam.jpg" alt="Lifted Chevy Silverado covered in foam during a hand wash in a customer's driveway" width="750" height="1000" loading="lazy"><span class="results-label">Foam wash</span></li>
-          </ul>
-          <div class="fold-ctas">
-            <a href="#quote" class="btn-quote">Get My Free Quote</a>
-            <a href="tel:+16023505833" class="btn-call" aria-label="Call Grit N Grind Auto Care at (602) 350-5833">(602) 350-5833</a>
           </div>
         </div>
       </section>
 
-      <!-- FOLD 5: WHY US -->
-      <section class="fold fold-white" id="why" aria-labelledby="why-title">
-        <div class="why-inner">
-          <div class="why-media">
-            <img src="images/team-tesla-foam.jpg" alt="Grit N Grind detailer foam-washing a Tesla in a customer's driveway" width="1000" height="1000" loading="lazy">
-          </div>
-          <div class="why-content">
-            <h2 class="why-title" id="why-title"><strong>Why Choose</strong> Grit N Grind</h2>
-            <ul class="why-list">
-              <li>
-                <span class="why-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg></span>
-                <p><strong>Quality products.</strong> Professional-grade products for a finish that looks great and lasts.</p>
-              </li>
-              <li>
-                <span class="why-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c3 4 5 6.5 5 9.5a5 5 0 0 1-10 0C7 9.5 9 7 12 3z"/></svg></span>
-                <p><strong>Detailing done right.</strong> Thorough, detail-focused work inside and out. Stains, pet hair and grime, handled.</p>
-              </li>
-              <li>
-                <span class="why-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg></span>
-                <p><strong>We come to you.</strong> Mobile service at your home or work, and we bring our own water. No drop-off, no waiting around.</p>
-              </li>
-              <li>
-                <span class="why-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="6"/><path d="M8.5 14.5L7 22l5-3 5 3-1.5-7.5"/></svg></span>
-                <p><strong>Satisfaction guaranteed.</strong> No deposit, you pay after. If you're not happy based on what we laid out, we come back and reclean free of charge.</p>
-              </li>
-            </ul>
-            <div class="fold-ctas left">
-              <a href="#quote" class="btn-quote">Start My Quote</a>
-              <a href="tel:+16023505833" class="btn-call" aria-label="Call Grit N Grind Auto Care at (602) 350-5833">(602) 350-5833</a>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- FOLD 6: HOW IT WORKS -->
-      <section class="fold" id="how" aria-labelledby="how-title">
-        <div class="fold-inner">
-          <div class="fold-head">
-            <h2 class="fold-title" id="how-title"><strong>How It Works</strong></h2>
-            <p class="fold-sub">Getting your car detailed has never been easier.</p>
-          </div>
-          <ol class="steps">
-            <li class="step">
-              <p class="step-num" aria-hidden="true">1</p>
-              <h3>Request a quote</h3>
-              <p>Fill out the form in about 30 seconds, or give us a call.</p>
-            </li>
-            <li class="step">
-              <p class="step-num" aria-hidden="true">2</p>
-              <h3>Pick your package and time</h3>
-              <p>We get in touch with your price and find a time that works for you.</p>
-            </li>
-            <li class="step">
-              <p class="step-num" aria-hidden="true">3</p>
-              <h3>We detail, you pay after</h3>
-              <p>We come to your home or work. You pay once the job is done and you love it.</p>
-            </li>
-          </ol>
-          <div class="fold-ctas">
-            <a href="#quote" class="btn-quote">Get My Free Quote</a>
-            <a href="tel:+16023505833" class="btn-call" aria-label="Call Grit N Grind Auto Care at (602) 350-5833">(602) 350-5833</a>
-          </div>
-        </div>
-      </section>
-
-      <!-- FOLD 7: FAQ -->
-      <section class="fold fold-white" id="faq" aria-labelledby="faq-title">
-        <div class="fold-inner">
-          <div class="fold-head">
-            <h2 class="fold-title" id="faq-title"><strong>Common Questions</strong></h2>
-          </div>
+      <!-- 7. FAQ -->
+      <section class="section" id="faq" aria-labelledby="faq-title">
+        <div class="section-inner">
+          <p class="section-eyebrow">Questions</p>
+          <h2 class="section-title" id="faq-title">Frequently asked questions</h2>
           <div class="faq-list">
             <div class="faq-item">
-              <button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a-1">
+              <button class="faq-q" aria-expanded="false" aria-controls="faq-a-1" onclick="toggleFaq(this)">
+                Do you require a deposit? How do I pay?
+                <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="faq-chevron-g"><polyline points="6 9 12 15 18 9"/></g></svg>
+              </button>
+              <div class="faq-a" id="faq-a-1"><div class="faq-a-inner">No deposit required. You pay after the job is done and you're happy with the results. We accept card and cash.</div></div>
+            </div>
+            <div class="faq-item">
+              <button class="faq-q" aria-expanded="false" aria-controls="faq-a-2" onclick="toggleFaq(this)">
+                Do you come to me? Do I need to provide water?
+                <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="faq-chevron-g"><polyline points="6 9 12 15 18 9"/></g></svg>
+              </button>
+              <div class="faq-a" id="faq-a-2"><div class="faq-a-inner">Yes, we're fully mobile and come to your home or work, and we bring our own water. No drop-off, no waiting at a shop.</div></div>
+            </div>
+            <div class="faq-item">
+              <button class="faq-q" aria-expanded="false" aria-controls="faq-a-3" onclick="toggleFaq(this)">
                 Which package is right for me?
-                <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+                <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="faq-chevron-g"><polyline points="6 9 12 15 18 9"/></g></svg>
               </button>
-              <div class="faq-a" id="faq-a-1"><div class="faq-a-inner">Most customers go with The Full Reset, a thorough interior and exterior detail. Choose The Showroom if you want the works: steam cleaning, paint decontamination, clay treatment and a gloss-enhancing finish. The Refresh is a maintenance detail for cars we've already detailed.</div></div>
+              <div class="faq-a" id="faq-a-3"><div class="faq-a-inner">Most customers go with The Full Reset, a thorough interior and exterior detail. Choose The Showroom if you want the works: steam cleaning, paint decontamination, clay treatment and a gloss-enhancing finish. The Refresh is a maintenance detail for cars we've already detailed.</div></div>
             </div>
             <div class="faq-item">
-              <button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a-2">
+              <button class="faq-q" aria-expanded="false" aria-controls="faq-a-4" onclick="toggleFaq(this)">
                 How long does a detail take?
-                <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+                <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="faq-chevron-g"><polyline points="6 9 12 15 18 9"/></g></svg>
               </button>
-              <div class="faq-a" id="faq-a-2"><div class="faq-a-inner">The Refresh takes about 1 to 2 hours, The Full Reset 1.5 to 3 hours, and The Showroom 2 to 3 hours, depending on the size and condition of your vehicle.</div></div>
+              <div class="faq-a" id="faq-a-4"><div class="faq-a-inner">The Refresh takes about 1 to 2 hours, The Full Reset 1.5 to 3 hours, and The Showroom 2 to 3 hours, depending on the size and condition of your vehicle.</div></div>
             </div>
             <div class="faq-item">
-              <button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a-3">
-                Do SUVs and trucks cost more?
-                <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
-              </button>
-              <div class="faq-a" id="faq-a-3"><div class="faq-a-inner">Yes, SUVs and trucks are $20 more on every package because there's more vehicle to clean.</div></div>
-            </div>
-            <div class="faq-item">
-              <button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a-4">
-                Do you come to me? What areas do you serve?
-                <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
-              </button>
-              <div class="faq-a" id="faq-a-4"><div class="faq-a-inner">Yes, we're fully mobile and come to your home or work, and we bring our own water. We serve Tempe, Mesa, Chandler, Sun Lakes, Gilbert and Queen Creek. Not sure if we cover you? Give us a call and we'll check.</div></div>
-            </div>
-            <div class="faq-item">
-              <button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a-5">
-                Do you need a deposit? How do I pay?
-                <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
-              </button>
-              <div class="faq-a" id="faq-a-5"><div class="faq-a-inner">No deposit required. You pay after the job is done and you're happy with the results. We accept card and cash.</div></div>
-            </div>
-            <div class="faq-item">
-              <button type="button" class="faq-q" aria-expanded="false" aria-controls="faq-a-6">
+              <button class="faq-q" aria-expanded="false" aria-controls="faq-a-5" onclick="toggleFaq(this)">
                 What if I'm not happy with the results?
-                <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+                <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="faq-chevron-g"><polyline points="6 9 12 15 18 9"/></g></svg>
               </button>
-              <div class="faq-a" id="faq-a-6"><div class="faq-a-inner">We provide a satisfaction guarantee. If you are not happy based on the expectations we laid out, we will come back and reclean free of charge.</div></div>
+              <div class="faq-a" id="faq-a-5"><div class="faq-a-inner">We provide a satisfaction guarantee. If you are not happy based on the expectations we laid out, we will come back and reclean free of charge.</div></div>
             </div>
           </div>
-          <div class="fold-ctas">
-            <a href="#quote" class="btn-quote">Get My Free Quote</a>            <a href="tel:+16023505833" class="btn-call" aria-label="Call Grit N Grind Auto Care at (602) 350-5833">(602) 350-5833</a>
+          <div class="section-ctas">
+            <a href="#quote" class="btn-quote">Get My Free Quote</a>
+            <a href="tel:+16023505833" class="btn-call" aria-label="Call Grit N Grind Auto Care at (602) 350-5833">(602) 350-5833</a>
           </div>
         </div>
       </section>
 
-      <!-- FOLD 8: FINAL CTA -->
-      <section class="fold-final" aria-labelledby="final-title">
-        <p class="hero-tagline">Cleaner cars. Better drives.</p>
-        <h2 class="final-title" id="final-title">Ready for a Full Reset?</h2>
-        <p class="final-sub">Get a free quote in 30 seconds. We'll get in touch shortly.</p>
-        <div class="fold-ctas">
+      <!-- 8. SERVICE AREAS -->
+      <section class="section section-alt" id="areas" aria-labelledby="areas-title">
+        <div class="section-inner">
+          <p class="section-eyebrow">Where we work</p>
+          <h2 class="section-title" id="areas-title">Serving the East Valley</h2>
+          <div class="areas-list">
+            <span class="area-chip">Tempe</span>
+            <span class="area-chip">Mesa</span>
+            <span class="area-chip">Chandler</span>
+            <span class="area-chip">Sun Lakes</span>
+            <span class="area-chip">Gilbert</span>
+            <span class="area-chip">Queen Creek</span>
+          </div>
+          <p class="areas-note">Not sure if we cover your area? Call us and we're happy to check.</p>
+          <div class="section-ctas">
+            <a href="#quote" class="btn-quote">Get My Free Quote</a>
+            <a href="tel:+16023505833" class="btn-call" aria-label="Call Grit N Grind Auto Care at (602) 350-5833">(602) 350-5833</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- 9. FINAL CTA -->
+      <section class="section-final" aria-labelledby="final-cta-title">
+        <p class="section-eyebrow">Cleaner cars. Better drives.</p>
+        <h2 id="final-cta-title">Ready for a Full Reset?</h2>
+        <div class="section-ctas">
           <a href="#quote" class="btn-quote">Get My Free Quote</a>
           <a href="tel:+16023505833" class="btn-call" aria-label="Call Grit N Grind Auto Care at (602) 350-5833">(602) 350-5833</a>
         </div>
@@ -1364,10 +1233,9 @@ h1.hero-h1 { font-weight: 700; font-style: italic; }
       </section>
     </main>
 
-    <footer class="site-footer">
-      <a href="tel:+16023505833" class="footer-phone">(602) 350-5833</a><br>
-      Mobile detailing in Tempe, Mesa, Chandler, Sun Lakes, Gilbert and Queen Creek<br>
-      © 2026 Grit N Grind Auto Care
+    <footer class="section-footer">
+      <p class="footer-phone">(602) 350-5833 · Tempe, Mesa, Chandler, Sun Lakes, Gilbert &amp; Queen Creek</p>
+      <p class="footer-copy">© 2026 Grit N Grind Auto Care. All rights reserved</p>
     </footer>
 
     <!-- STICKY MOBILE CTA BAR -->
@@ -1377,12 +1245,105 @@ h1.hero-h1 { font-weight: 700; font-style: italic; }
     </div>
 
     <script>
-      // FAQ accordion
-      document.querySelectorAll('.faq-q').forEach(function (btn) {
-        btn.addEventListener('click', function () {
-          const open = btn.getAttribute('aria-expanded') === 'true';
-          btn.setAttribute('aria-expanded', String(!open));
-          document.getElementById(btn.getAttribute('aria-controls')).classList.toggle('open', !open);
+      // Vehicle-size pricing: SUVs and trucks are $20 more on every package.
+      const prices = {
+        car: { refresh: '$110', reset: '$150', showroom: '$250' },
+        suv: { refresh: '$130', reset: '$170', showroom: '$270' }
+      };
+
+      function selectVehicle(btn, size) {
+        document.querySelectorAll('.vehicle-btn').forEach(b => b.setAttribute('aria-pressed', 'false'));
+        btn.setAttribute('aria-pressed', 'true');
+        const p = prices[size];
+        const priceEls = [
+          [document.getElementById('price-refresh'), p.refresh],
+          [document.getElementById('price-reset'), p.reset],
+          [document.getElementById('price-showroom'), p.showroom],
+        ];
+        priceEls.forEach(([el]) => el.classList.add('price-updating'));
+        window.setTimeout(() => {
+          priceEls.forEach(([el, value]) => {
+            el.textContent = value;
+            el.classList.remove('price-updating');
+          });
+        }, 180);
+      }
+
+      function toggleFaq(header) {
+        const isOpen = header.getAttribute('aria-expanded') === 'true';
+        const body = document.getElementById(header.getAttribute('aria-controls'));
+        const chevron = header.querySelector('.faq-chevron');
+        header.setAttribute('aria-expanded', String(!isOpen));
+        body.classList.toggle('open');
+        chevron.classList.toggle('open');
+      }
+
+      // Sticky nav compacts once the page has scrolled past the top.
+      (function () {
+        const sentinel = document.getElementById('nav-sentinel');
+        const navEl = document.querySelector('nav');
+        if (!sentinel || !navEl || !('IntersectionObserver' in window)) return;
+        const navObserver = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            navEl.classList.toggle('nav-scrolled', !entry.isIntersecting);
+          });
+        });
+        navObserver.observe(sentinel);
+      })();
+
+      // Scroll-reveal for genuine repeating lists (trust items, packages, gallery, reviews).
+      // Content is fully visible by default; this only arms the hidden state once JS runs,
+      // and anything already in the viewport at load is marked visible immediately rather
+      // than waiting on the observer, so nothing can ship permanently blank.
+      (function () {
+        const revealEls = document.querySelectorAll('[data-reveal]');
+        if (!revealEls.length || !('IntersectionObserver' in window)) return;
+        document.body.classList.add('reveal-armed');
+        const revealObserver = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting || entry.boundingClientRect.top < 0) {
+                entry.target.classList.add('reveal-in');
+                revealObserver.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.15 }
+        );
+        const viewportHeight = window.innerHeight;
+        const rects = Array.from(revealEls, (el) => el.getBoundingClientRect());
+        revealEls.forEach((el, i) => {
+          const rect = rects[i];
+          const alreadyVisible = rect.top < viewportHeight && rect.bottom > 0;
+          if (alreadyVisible) {
+            el.classList.add('reveal-in');
+          } else {
+            revealObserver.observe(el);
+          }
+        });
+      })();
+
+      // Capture URL tracking params and inject as hidden fields
+      (function() {
+        const params = new URLSearchParams(window.location.search);
+        const trackingParams = ['gclid', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_keyword', 'utm_content'];
+        trackingParams.forEach(function(param) {
+          const value = params.get(param);
+          if (value) {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = param;
+            input.value = value;
+            document.getElementById('quoteForm').appendChild(input);
+          }
+        });
+      })();
+
+      // Pricing cards: scroll up to the quote form and tick the matching service.
+      document.querySelectorAll('.pkg-book[data-service]').forEach(function (link) {
+        link.addEventListener('click', function () {
+          const box = document.querySelector('#quoteForm input[name="package"][value="' + link.dataset.service + '"]');
+          if (box) box.checked = true;
         });
       });
 
@@ -1402,6 +1363,9 @@ h1.hero-h1 { font-weight: 700; font-style: italic; }
             more.textContent = expanded ? 'Read less' : 'Read more';
           });
           checkClamp(bubble);
+        });
+        window.addEventListener('resize', function () {
+          document.querySelectorAll('.reviews-grid > li:not([hidden]) .review-bubble').forEach(checkClamp);
         });
         const loadBtn = document.getElementById('reviewsLoadMore');
         const extras = document.querySelectorAll('.review-extra');
@@ -1437,7 +1401,7 @@ h1.hero-h1 { font-weight: 700; font-style: italic; }
         })
           .then(function (response) {
             if (!response.ok) throw new Error('Submission failed');
-            quoteForm.innerHTML = '<div class="form-success"><h3>You\'re all set!</h3><p>Thanks for reaching out. We\'ll get in touch shortly with your quote.</p></div>';
+            quoteForm.innerHTML = '<div class="form-success"><h3>You\'re all set!</h3><p>Thanks for reaching out. We\'ll give you a call shortly from (602) 350-5833 with your quote.</p><a href="tel:+16023505833" class="btn-call">Need it sooner? Call now</a></div>';
           })
           .catch(function () {
             formError.hidden = false;
